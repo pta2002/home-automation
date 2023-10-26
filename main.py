@@ -2,12 +2,11 @@
 import paho.mqtt.client as mqtt
 import json
 
-switches = ["zigbee2mqtt/0xcc86ecfffe87753d", "zigbee2mqtt/0x50325ffffe784b22"]
-ceil_light = "zigbee2mqtt/0x70ac08fffeb95221"
+switches = ["zigbee2mqtt/large_remote"]
 lights = [
-    ceil_light,
-    "zigbee2mqtt/0xb4e3f9fffeb34960",
-    "zigbee2mqtt/0xcc86ecfffe8d40c7",
+    "zigbee2mqtt/ceiling_light",
+    "zigbee2mqtt/bed_light",
+    "zigbee2mqtt/desk_light",
 ]
 
 # TODO: Publish current light as a home assistant sensor
@@ -26,8 +25,6 @@ def on_message(client, userdata, msg):
     cur_light = userdata["cur_light"]
     print(f"Current light: {cur_light}")
     light = lights[cur_light]
-    if msg.topic == switches[1]:
-        light = ceil_light
 
     if msg.topic in switches:
         payload = json.loads(msg.payload)
