@@ -36,6 +36,21 @@ def on_message(client, userdata, msg):
             client.publish(f"{light}/set", json.dumps({"state": "ON"}))
         elif payload["action"] == "off":
             client.publish(f"{light}/set", json.dumps({"state": "OFF"}))
+        elif payload["action"] == "brightness_move_up":
+            client.publish(f"{light}/set", json.dumps({"brightness_move": 40}))
+        elif payload["action"] == "brightness_move_down":
+            client.publish(f"{light}/set", json.dumps({"brightness_move": -40}))
+        elif payload["action"] == "brightness_stop":
+            client.publish(f"{light}/set", json.dumps({"brightness_move": 0}))
+        elif payload["action"] == "arrow_right_hold":
+            client.publish(f"{light}/set", json.dumps({"color_temp_move": 40}))
+        elif payload["action"] == "arrow_left_hold":
+            client.publish(f"{light}/set", json.dumps({"color_temp_move": -40}))
+        elif (
+            payload["action"] == "arrow_right_release"
+            or payload["action"] == "arrow_left_release"
+        ):
+            client.publish(f"{light}/set", json.dumps({"color_temp_move": "stop"}))
         elif payload["action"] == "arrow_right_click":
             client.user_data_set({"cur_light": (cur_light + 1) % len(lights)})
         elif payload["action"] == "arrow_left_click":
