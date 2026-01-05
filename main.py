@@ -14,7 +14,7 @@ lights = [
 
 
 def on_connect(client, userdata, flags, reason_code, properties):
-    print("Connected with result code " + reason_code)
+    print("Connected with result code", reason_code)
     for switch in switches:
         print(f"connecting to switch {switch}")
         client.subscribe(switch)
@@ -29,6 +29,9 @@ def on_message(client, userdata, msg):
 
     if msg.topic in switches:
         payload = json.loads(msg.payload)
+        if "action" not in payload:
+            print("WARN: No action in payload:", payload)
+            return
 
         if payload["action"] == "on":
             client.publish(f"{light}/set", json.dumps({"state": "ON"}))
@@ -56,7 +59,7 @@ def on_message(client, userdata, msg):
             client.user_data_set({"cur_light": cur_light})
 
 
-client = mqtt.Client(userdata={"cur_light": 0})
+client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, userdata={"cur_light": 0})
 client.on_connect = on_connect
 client.on_message = on_message
 client.enable_logger()
