@@ -12,11 +12,9 @@ lights = [
 # TODO: Publish current light as a home assistant sensor
 # https://github.com/hjelev/rpi-mqtt-monitor/blob/master/src/rpi-cpu2mqtt.py
 
-# TODO: Allow brightness up/down
 
-
-def on_connect(client, userdata, flags, rc):
-    print("Connected with result code " + str(rc))
+def on_connect(client, userdata, flags, reason_code, properties):
+    print("Connected with result code " + reason_code)
     for switch in switches:
         print(f"connecting to switch {switch}")
         client.subscribe(switch)
